@@ -1,0 +1,25 @@
+@font-face {
+  font-family: 'minecraftfont';
+  src: url('fonts/minecraftfont/minecraftfont.eot');
+  src: local('minecraftfont'), url('fonts/minecraftfont/minecraftfont.woff') format('woff'), url('fonts/minecraftfont/minecraftfont.ttf') format('truetype');
+}
+
+body {
+  margin: 0;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+    sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+
+  background: #eee;
+  font-family: 'minecraftfont' !important;
+  padding: 10px;
+  color: #404040;
+}
+
+
+code {
+  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
+    monospace;
+}

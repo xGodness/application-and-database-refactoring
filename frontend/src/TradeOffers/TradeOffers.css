@@ -1,0 +1,16 @@
+.wanted {
+    display: inline-block;
+}
+
+.wanted .gridCell:nth-child(9n+1) {
+    clear: left;
+}
+
+.sides {
+    display: inline-flex;
+}
+
+.minioffer {
+    display: flex;
+    margin-top: 50px;
+}

@@ -1,84 +1,91 @@
 package com.xgodness.itmodbcoursework.database.util.sql;
 
 public enum InitSqlRequest {
+    TYPE_USER_ROLE("""
+            DO $$ BEGIN
+                CREATE TYPE app_role AS ENUM ('USER', 'ADMIN');
+            EXCEPTION
+                WHEN duplicate_object THEN null;
+            END $$;
+            """),
     TABLE_APP_USER("""
             CREATE TABLE IF NOT EXISTS app_user (
-                id SERIAL PRIMARY KEY,
-                username TEXT UNIQUE NOT NULL,
-                password TEXT NOT NULL,
-                role APP_ROLE NOT NULL
+                id          SERIAL      PRIMARY KEY,
+                username    TEXT        UNIQUE NOT NULL,
+                password    TEXT        NOT NULL,
+                role        APP_ROLE    NOT NULL
             );
             """),
     TABLE_ITEM("""
             CREATE TABLE IF NOT EXISTS item (
-                id BIGINT PRIMARY KEY,
-                name TEXT UNIQUE NOT NULL,
-                display_name TEXT NOT NULL
+                id              BIGINT  PRIMARY KEY,
+                name            TEXT    UNIQUE NOT NULL,
+                display_name    TEXT    NOT NULL
             );
             """),
     TABLE_CHEST_CASINO("""
             CREATE TABLE IF NOT EXISTS chest_casino (
-                user_id BIGINT REFERENCES app_user (id),
-                last_opened_time TIMESTAMP,
-                last_received_item_id BIGINT REFERENCES item (id),
-                PRIMARY KEY (user_id)
+                user_id                 BIGINT      REFERENCES app_user (id),
+                last_opened_time        TIMESTAMP,
+                last_received_item_id   BIGINT      REFERENCES item (id),
+                                        PRIMARY KEY (user_id)
             );
             """),
     TABLE_TRADE_OFFER("""
             CREATE TABLE IF NOT EXISTS trade_offer (
-                id SERIAL PRIMARY KEY,
-                user_id BIGINT REFERENCES app_user (id)
+                id          SERIAL      PRIMARY KEY,
+                user_id     BIGINT      REFERENCES app_user (id)
             );
             """),
     TABLE_TRADE_OFFER_ITEMS_WANTED("""
             CREATE TABLE IF NOT EXISTS trade_offer_items_wanted (
-                offer_id BIGINT REFERENCES trade_offer (id),
-                item_id BIGINT REFERENCES item (id),
-                cnt INTEGER NOT NULL,
-                PRIMARY KEY (offer_id, item_id),
-                CHECK (cnt > 0)
+                offer_id    BIGINT      REFERENCES trade_offer (id),
+                item_id     BIGINT      REFERENCES item (id),
+                cnt         INTEGER     NOT NULL,
+                            PRIMARY KEY (offer_id, item_id),
+                            CHECK (cnt > 0)
             );
             """),
     TABLE_TRADE_OFFER_ITEMS_OFFERED("""
             CREATE TABLE IF NOT EXISTS trade_offer_items_offered (
-                offer_id BIGINT REFERENCES trade_offer (id),
-                item_id BIGINT REFERENCES item (id),
-                cnt INTEGER NOT NULL,
-                PRIMARY KEY (offer_id, item_id),
-                CHECK (cnt > 0)
+                offer_id    BIGINT      REFERENCES trade_offer (id),
+                item_id     BIGINT      REFERENCES item (id),
+                cnt         INTEGER     NOT NULL,
+                            PRIMARY KEY (offer_id, item_id),
+                            CHECK (cnt > 0)
             );
             """),
     TABLE_RECIPE("""
             CREATE TABLE IF NOT EXISTS recipe (
-                id SERIAL PRIMARY KEY,
-                result_item_id BIGINT REFERENCES item (id) ON DELETE CASCADE,
-                result_item_cnt INTEGER NOT NULL,
-                lt_id BIGINT REFERENCES item (id) ON DELETE CASCADE,
-                lc_id BIGINT REFERENCES item (id) ON DELETE CASCADE,
-                lb_id BIGINT REFERENCES item (id) ON DELETE CASCADE,
-                ct_id BIGINT REFERENCES item (id) ON DELETE CASCADE,
-                cc_id BIGINT REFERENCES item (id) ON DELETE CASCADE,
-                cb_id BIGINT REFERENCES item (id) ON DELETE CASCADE,
-                rt_id BIGINT REFERENCES item (id) ON DELETE CASCADE,
-                rc_id BIGINT REFERENCES item (id) ON DELETE CASCADE,
-                rb_id BIGINT REFERENCES item (id) ON DELETE CASCADE,
-                CHECK (result_item_cnt > 0)
+                id                  SERIAL      PRIMARY KEY,
+                result_item_id      BIGINT      REFERENCES item (id) ON DELETE CASCADE,
+                result_item_cnt     INTEGER     NOT NULL,
+                lt_id               BIGINT      REFERENCES item (id) ON DELETE CASCADE,
+                lc_id               BIGINT      REFERENCES item (id) ON DELETE CASCADE,
+                lb_id               BIGINT      REFERENCES item (id) ON DELETE CASCADE,
+                ct_id               BIGINT      REFERENCES item (id) ON DELETE CASCADE,
+                cc_id               BIGINT      REFERENCES item (id) ON DELETE CASCADE,
+                cb_id               BIGINT      REFERENCES item (id) ON DELETE CASCADE,
+                rt_id               BIGINT      REFERENCES item (id) ON DELETE CASCADE,
+                rc_id               BIGINT      REFERENCES item (id) ON DELETE CASCADE,
+                rb_id               BIGINT      REFERENCES item (id) ON DELETE CASCADE,
+                                    CHECK (result_item_cnt > 0)
             );
             """),
     TABLE_RECIPE_CREATED_BY("""
             CREATE TABLE IF NOT EXISTS recipe_created_by (
-                user_id BIGINT REFERENCES app_user (id),
-                recipe_id BIGINT REFERENCES recipe (id) ON DELETE CASCADE,
-                PRIMARY KEY (user_id, recipe_id)
+                user_id         BIGINT      REFERENCES app_user (id),
+                recipe_id       BIGINT      REFERENCES recipe (id) ON DELETE CASCADE,
+                                PRIMARY KEY (user_id, recipe_id)
             );
             """),
     TABLE_USER_ITEMS("""
             CREATE TABLE IF NOT EXISTS user_items (
-                user_id BIGINT REFERENCES app_user (id),
-                item_id BIGINT REFERENCES item (id),
-                cnt INTEGER NOT NULL,
-                PRIMARY KEY (user_id, item_id),
-                CHECK (cnt > 0)
+                user_id         BIGINT      REFERENCES app_user (id),
+                item_id         BIGINT      REFERENCES item (id),
+                cnt             INTEGER     NOT NULL,
+                                PRIMARY KEY (user_id, item_id),
+                                CHECK (cnt > 0)
             );
             """),
     FUNC_OPEN_CHEST("""

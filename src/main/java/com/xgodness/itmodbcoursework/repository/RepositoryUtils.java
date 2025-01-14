@@ -10,7 +10,8 @@ import com.xgodness.itmodbcoursework.model.ItemPack;
 
 public class RepositoryUtils {
 
-    private RepositoryUtils() { }
+    private RepositoryUtils() {
+    }
 
     public static Item extractItem(ResultSet rs) throws SQLException {
         if (rs.next()) {

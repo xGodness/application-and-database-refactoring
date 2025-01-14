@@ -6,7 +6,8 @@ import java.util.List;
 import com.xgodness.itmodbcoursework.model.Recipe;
 
 public class RecipeValidator {
-    private RecipeValidator() { }
+    private RecipeValidator() {
+    }
 
     public static List<String> validateRecipe(Recipe recipe) {
         List<String> errorList = new ArrayList<>();

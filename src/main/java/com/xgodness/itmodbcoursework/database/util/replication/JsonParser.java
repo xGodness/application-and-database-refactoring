@@ -1,38 +1,36 @@
 package com.xgodness.itmodbcoursework.database.util.replication;
 
+import com.xgodness.itmodbcoursework.database.util.ResourceExtractor;
+import com.xgodness.itmodbcoursework.model.Item;
+import com.xgodness.itmodbcoursework.model.Recipe;
+import lombok.Getter;
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+import org.springframework.stereotype.Component;
+
 import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
-
-import com.xgodness.itmodbcoursework.model.Item;
-import com.xgodness.itmodbcoursework.model.Recipe;
-import org.springframework.boot.configurationprocessor.json.JSONArray;
-import org.springframework.boot.configurationprocessor.json.JSONException;
-import org.springframework.boot.configurationprocessor.json.JSONObject;
-import org.springframework.stereotype.Component;
 
 @Component
 public class JsonParser {
     private final String itemsJson;
     private final String recipesJson;
     private final String unresolvedItemsJson;
+    @Getter
     private final List<Item> itemList = new ArrayList<>();
+    @Getter
     private final List<Recipe> recipeList = new ArrayList<>();
+    @Getter
     private final List<String> itemNamesToDeleteList = new ArrayList<>();
 
-    public JsonParser() throws IOException, JSONException {
-        itemsJson = Files.readString(
-                Paths.get("src/main/java/com/xgodness/itmodbcoursework/database/util/replication/items.json")
-        );
-        recipesJson = Files.readString(
-                Paths.get("src/main/java/com/xgodness/itmodbcoursework/database/util/replication/recipes.json")
-        );
-        unresolvedItemsJson = Files.readString(
-                Paths.get("src/main/java/com/xgodness/itmodbcoursework/database/util/replication/unresolved_pic_items.json")
-        );
+    public JsonParser() throws JSONException {
+        ResourceExtractor resourceExtractor = new ResourceExtractor();
+        itemsJson = resourceExtractor.readResourceAsString("replication/items.json");
+        recipesJson = resourceExtractor.readResourceAsString("replication/recipes.json");
+        unresolvedItemsJson = resourceExtractor.readResourceAsString("replication/unresolved_pic_items.json");
         parseItems();
         parseRecipes();
         parseItemsToDelete();
@@ -111,17 +109,5 @@ public class JsonParser {
                 craftMatrix[i / 3][i % 3] = shape.getInt(i);
         }
         return craftMatrix;
-    }
-
-    public List<Item> getItemList() {
-        return itemList;
-    }
-
-    public List<Recipe> getRecipeList() {
-        return recipeList;
-    }
-
-    public List<String> getItemNamesToDeleteList() {
-        return itemNamesToDeleteList;
     }
 }

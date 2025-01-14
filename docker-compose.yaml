@@ -1,0 +1,28 @@
+services:
+  db:
+    image: postgres:14-alpine
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: refactoring
+    ports:
+      - 5444:5432
+    restart: unless-stopped
+    networks:
+      - docker-network
+
+  main-service:
+    build:
+      context: .
+      dockerfile: ./Dockerfile
+    depends_on:
+      - db
+    ports:
+      - 8080:8080
+    restart: unless-stopped
+    networks:
+      - docker-network
+
+networks:
+  docker-network:
+    driver: bridge

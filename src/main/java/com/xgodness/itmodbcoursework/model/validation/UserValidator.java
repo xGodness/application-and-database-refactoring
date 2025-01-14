@@ -7,7 +7,8 @@ import com.xgodness.itmodbcoursework.model.User;
 
 public class UserValidator {
 
-    private UserValidator() { }
+    private UserValidator() {
+    }
 
     public static List<String> validateUser(User user) {
         List<String> errorList = new ArrayList<>();

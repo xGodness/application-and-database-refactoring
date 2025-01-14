@@ -55,7 +55,7 @@ public class UserController {
     ResponseEntity<ResponseData> login(
             @RequestBody User user
     ) throws SQLException {
-        log.info("[REQUEST] login user %s with id %d".formatted(user.getUsername(), user.getId()));
+        log.info("[REQUEST] login user %s".formatted(user.getUsername()));
         return mainService.login(user);
     }
 
@@ -65,7 +65,6 @@ public class UserController {
     ResponseEntity<ResponseData> amIAdmin(
             @RequestBody User user
     ) throws SQLException {
-        log.info("[REQUEST] check admin rights on user %s with id %d".formatted(user.getUsername(), user.getId()));
         return mainService.checkAdminRights(user);
     }
 }

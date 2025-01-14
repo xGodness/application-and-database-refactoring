@@ -74,7 +74,10 @@ public class MainService {
             return new ResponseEntity<>(responseData, HttpStatus.BAD_REQUEST);
         }
 
-        userRepository.login(user);
+        if (userRepository.login(user) == -1) {
+            errorList.add(ValidationMessages.INVALID_CREDENTIALS.getMessage());
+            return new ResponseEntity<>(responseData, HttpStatus.BAD_REQUEST);
+        }
         return new ResponseEntity<>(responseData, HttpStatus.OK);
     }
 

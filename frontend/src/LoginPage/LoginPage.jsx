@@ -1,5 +1,5 @@
 import "./LoginPage.css";
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import Input from "../components/Input/Input";
 import Button from "../components/Button/Button";
 import axios from "axios";
@@ -33,14 +33,14 @@ const LoginPage = () => {
                 password: password,
             },
         })
-      .then((r) => {
+      .then(() => {
           
           console.log("LOGINED")
-          console.log(r)
           localStorage.setItem("username", username);
           localStorage.setItem("password", password);
+
           navigate("/");
-          
+          navigate(0);
           
       })
       .catch((err) => setError(err.response.data.errorList[0]));
@@ -56,7 +56,7 @@ const LoginPage = () => {
                 password: password,
             },
         })
-      .then((r) => {
+      .then(() => {
           localStorage.setItem("username", username);
           localStorage.setItem("password", password);
           navigate("/");
@@ -69,7 +69,7 @@ const LoginPage = () => {
         <h2>Username</h2>
         <Input value={username} onChange={handleChangeUsername}/>
         <h2>Password</h2>
-        <Input value={password} onChange={handleChangePassword}/>
+        <Input value={password} type={'password'} onChange={handleChangePassword}/>
         <br/>
         <br/>
         {error && error}

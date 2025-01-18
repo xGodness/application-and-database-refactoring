@@ -37,7 +37,7 @@ const CraftingPage = () => {
       },
     })
       .then((r) => setResultItem(r.data.resultList[0]))
-      .catch((err) => setResultItem(null));
+      .catch(() => setResultItem(null));
   }, [craftingTableArray]);
 
   useEffect(() => {
@@ -51,10 +51,10 @@ const CraftingPage = () => {
         password: localStorage.getItem("password"),
       },
     })
-      .then((r) => {
+      .then(() => {
 
       })
-      .catch((err) => navigate('/login'));
+      .catch(() => navigate('/login'));
     
     setCraftingTableArray([0, 0, 0, 0, 0, 0, 0, 0, 0]);
     setResultItem(null);
@@ -81,6 +81,7 @@ const CraftingPage = () => {
 
     console.log("REFRESHED");
   }, []);
+
   const selectCraftTable = (num) => {
     const craft2inventory = (id) => {
       let arr = [...craftingTableArray];
@@ -157,7 +158,7 @@ const CraftingPage = () => {
         ],
       },
     })
-      .then((r) => {
+      .then(() => {
         axios({
           method: "post",
           url: "http://localhost:8080/api/item/inventory",
@@ -279,8 +280,8 @@ const CraftingPage = () => {
   );
 
   return (
-    <div>
-      <div id="screen">
+    <div >
+      <div id="screen" style={{overflowX: "hidden", overflowY: "hidden", paddingBottom: "20px"}}>
         <CraftingTable />
         <Inventory />
       </div>

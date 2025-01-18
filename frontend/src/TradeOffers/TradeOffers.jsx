@@ -1,6 +1,6 @@
 import "./TradeOffers.css";
 import { useEffect, useState } from "react";
-import axios from "axios";
+import axios, {Cancel} from "axios";
 import InventoryCard from "../components/InventoryCard/InventoryCard";
 import Input from "../components/Input/Input";
 import Button from "../components/Button/Button";
@@ -13,7 +13,7 @@ const TradeOffers = () => {
     const [inventory, setInventory] = useState([]);
     const [allItems, setAllItems] = useState([]);
     
-    const [input, setInput] = useState("");
+
     
     const [itemsOffered, setItemsOffered] = useState([]);
     const [itemsWanted, setItemsWanted] = useState([]);
@@ -32,10 +32,10 @@ const TradeOffers = () => {
                 password: localStorage.getItem("password"),
             },
         })
-      .then((r) => {
+      .then(() => {
          
       })
-      .catch((err) => navigate('/login'));
+      .catch(() => navigate('/login'));
         
        axios({
       method: "post",
@@ -64,17 +64,19 @@ const TradeOffers = () => {
         headers: {},
         data: {},
     })
-      .then((r) => setOffers(r.data.resultList))
+      .then((r) => {
+
+          setOffers(r.data.resultList)
+          console.log("OFFERS")
+          console.log(r.data.resultList)
+      })
       .catch((err) => console.log(err));
 
     console.log("REFRESHED");
     }, []);
-    
-    
-    
-    const handleChange = (val) => {
-        setInput(val.target.value);
-    };
+
+
+
     
     const addItemsWanted = (id) => {
  
@@ -173,35 +175,7 @@ const TradeOffers = () => {
         </div>
         );
     
-    const Items = () => (
-        <div className="itemsWrapper">
-            <h2>All items</h2>
-            <p>Click on an item from items to add it to the wanted.</p>
-            <Input value={input} onChange={handleChange} />
-            <div id="inventory">
-                {allItems
-          .filter((el) => {
-              return el.displayName.toLowerCase().includes(input.toLowerCase());
-              // return true;
-          })
-          .map((el) => {
-              const item = el;
 
-              return (
-                  <InventoryCard
-                      id={item.id}
-                      name={item.name}
-                      displayName={item.displayName}
-                      selectCard={addItemsWanted}
-                      // selected={item.id === selectedItem}
-                      // count={count}
-                      key={item.id}
-                  />
-                  );
-          })}
-            </div>
-        </div>
-        );
     
     const onRemoveOffered = (id) => {
         let newItemsOffered = [...itemsOffered];
@@ -337,28 +311,17 @@ const TradeOffers = () => {
                 itemsOffered: itemsOffered
             },
         })
-      .then((r) => {
+      .then(() => {
           setItemsOffered([]);
           setItemsWanted([]);
       })
       .catch((err) => console.log(err));
     }
-    
-    
-//    {
-//        "id": 1,
-//            "user": {
-//            "id": 1,
-//                "username": "superuser",
-//                "password": null
-//    },
-//        "itemsWanted": [],
-//            "itemsOffered": []
-//    }
+
     const Offers = () => {
         return <div className={"offers"}>
             {offers.map(el => {
-                const {id, itemsWanted, itemsOffered} = el;
+                const {id, itemsWanted, itemsOffered, user} = el;
          
                 const acceptOffer = (el) => {
                     
@@ -374,9 +337,11 @@ const TradeOffers = () => {
                             offerId: el.target.id,
                         },
                     })
-                      .then((r) => console.log(r.data.resultList))
+                      .then((r) => {console.log(r.data.resultList);})
                       .catch((err) => console.log(err));
                 }
+
+                const ownOffer = user.username === localStorage.getItem("username");
                 
                 return <div className={"minioffer"}>
                     <h3>Wanted</h3>
@@ -405,7 +370,7 @@ const TradeOffers = () => {
                             />);
                     })}
                     
-                    <Button onClick={acceptOffer} id={id}>Accept Offer</Button>
+                    <Button onClick={acceptOffer} id={id} key={id}>{ownOffer? "Cancel" : "Accept"} Offer</Button>
                 </div>
 
             })}
@@ -425,11 +390,52 @@ const TradeOffers = () => {
                 </div>
                 <div className={"wanted"}>
                     <Wanted />
-                    <Items />
+                    <Items
+                        allItems={allItems}
+                        addItemsWanted={addItemsWanted}
+                    />
                 </div>
             </div>
         <Offers />
     </div>
 }
+
+const Items = ({allItems, addItemsWanted}) => {
+
+    const [input, setInput] = useState("");
+    const handleChange = (val) => {
+        setInput(val.target.value);
+    };
+
+    return (
+        <div className="itemsWrapper">
+        <h2>All items</h2>
+        <p>Click on an item from items to add it to the wanted.</p>
+        <Input value={input} onChange={handleChange}/>
+        <div id="inventory">
+            {allItems
+                .filter((el) => {
+                    return el.displayName.toLowerCase().includes(input.toLowerCase());
+                    // return true;
+                })
+                .map((el) => {
+                    const item = el;
+
+                    return (
+                        <InventoryCard
+                            id={item.id}
+                            name={item.name}
+                            displayName={item.displayName}
+                            selectCard={addItemsWanted}
+                            // selected={item.id === selectedItem}
+                            // count={count}
+                            key={item.id}
+                        />
+                    );
+                })}
+        </div>
+    </div>
+    )
+};
 
 export default TradeOffers
